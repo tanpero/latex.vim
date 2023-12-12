@@ -46,13 +46,13 @@ function! SetLaTeXTemplate()
     put = '% 标题页'
     put = '\begin{titlepage}'
     put = '    \begin{center}'
-    put = '        \bfseries\fontsize{28}{32}\selectfont Your Title Here'
-    put = ''
-    put = '        \vspace{2cm}'
-    put = ''
-    put = '        \fontsize{16}{18}\selectfont Your Name'
+    put = '        \bfseries\fontsize{28}{32}\selectfont 书名'
     put = ''
     put = '        \vspace{1cm}'
+    put = ''
+    put = '        \fontsize{16}{18}\selectfont Camille Dolma'
+    put = ''
+    put = '        \vspace{0.618cm}'
     put = ''
     put = '        \fontsize{14}{16}\selectfont \today  % 使用中文日期'
     put = ''
@@ -114,25 +114,29 @@ function! InsertLaTeXTemplate(command)
     elseif a:command ==# 't'
         let template = "\\begin{table}\n\t\\caption{Table caption}\n\t\\centering\n\t\\begin{tabular}{|c|c|}\n\t\t\\hline\n\t\tHeader1 & Header2 \\\\\n\t\t\\hline\n\t\tContent1 & Content2 \\\\\n\t\t\\hline\n\t\\end{tabular}\n\\end{table}"
     elseif a:command ==# 'l'
-        let template = "\\begin{itemize}\n\t\\item Item 1\n\t\\item Item 2\n\\end{itemize}"
+        let template = "\\begin{itemize}\n\t\\item 项目 1\n\t\\item 项目 2\n\\end{itemize}"
     elseif a:command ==# 'lr'
-        let template = "\\label{label-name}"
+        let template = "\\label{标签}"
     elseif a:command ==# 'fn'
-        let template = "This is some text.\footnote{This is a footnote.}"
+        let template = "\footnote{脚注}"
     elseif a:command ==# 'hl'
-        let template = "\\href{http://www.example.com}{Link Text}"
+        let template = "\\href{http://www.example.com}{链接文本}"
     elseif a:command ==# 'mt'
-        let template = "\\begin{theorem}\n\tThis is a theorem.\n\\end{theorem}"
+        let template = "\\begin{theorem}\n\t这是一个定理\n\\end{theorem}"
     elseif a:command ==# 'ml'
-        let template = "\\begin{lemma}\n\tThis is a lemma.\n\\end{lemma}"
+        let template = "\\begin{lemma}\n\t这是一个引理\n\\end{lemma}"
     elseif a:command ==# '1'
-        let template = "\\section{Section Title}"
+        let template = "\\section{}"
     elseif a:command ==# '2'
-        let template = "\\subsection{Subsection Title}"
+        let template = "\\subsection{}"
     elseif a:command ==# '3'
-        let template = "\\subsubsection{Subsubsection Title}"
+        let template = "\\subsubsection{}"
+    elseif a:command ==# '4'
+        let template = "\\paragraph{}"
+    elseif a:command ==# '5'
+        let template = "\\subparagraph{}"
     elseif a:command ==# 'ac'
-        let template = "\\begin{acronym}\n\t\\acro{ABC}{Acronym for ABC}\n\\end{acronym}"
+        let template = "\\begin{acronym}\n\t\\acro{GNU}{GNU's Not Unix}\n\\end{acronym}"
     endif
 
     if !empty(template)
@@ -143,7 +147,7 @@ endfunction
 nnoremap <C-o> :call LaTeXInsertMode()<CR>
 
 function! LaTeXInsertMode()
-    let command = input("Enter LaTeX command: ")
+    let command = input("输入 LaTeX 快捷命令：")
     call InsertLaTeXTemplate(command)
 endfunction
 
