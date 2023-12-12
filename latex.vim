@@ -12,8 +12,6 @@ function! SetLaTeXTemplate()
     put = '\usepackage{titlesec}'
     put = '\usepackage{setspace}'
     put = '\usepackage{geometry}'
-    put = '\usepackage{amsmath}  % 数学公式宏包'
-    put = '\usepackage{amssymb}  % 数学符号宏包'
     put = '\usepackage{listings}  % 代码块宏包'
     put = '\usepackage{graphicx}  % 图像宏包'
     put = '\usepackage{float}  % 浮动体宏包'
