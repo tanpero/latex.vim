@@ -22,6 +22,10 @@ function! SetLaTeXTemplate()
     put = '\usepackage{hyperref}  % 超链接宏包'
     put = '\usepackage{natbib}  % 参考文献宏包'
     put = '\usepackage{lipsum}'
+    put = '\usepackage[english, chinese]{babel}'
+    put = '\usepackage{datetime2}'
+    put = '\DTMlangsetup[en-US]{showdayofmonth=false}'
+    put = '\DTMlangsetup[chinese]{showdayofmonth=false}'
     put = ''
     put = ''
     put = '% 设置中文字体'
@@ -53,8 +57,8 @@ function! SetLaTeXTemplate()
     put = '        \fontsize{16}{18}\selectfont Camille Dolma'
     put = ''
     put = '        \vspace{0.618cm}'
-    put = ''
-    put = '        \fontsize{14}{16}\selectfont \today  % 使用中文日期'
+    put = ''       
+    put = '        \fontsize{14}{16}\selectfont \DTMtoday  % 使用中文日期'
     put = ''
     put = '    \end{center}'
     put = '\end{titlepage}'
@@ -64,18 +68,18 @@ function! SetLaTeXTemplate()
     put = '\newpage'
     put = ''
     put = '% 正文'
-    put = '\section{第一节}'
-    put = '\paragraph{段落1}'
+    put = '\section{Section 1}'
+    put = '\paragraph{Paragraph 1}'
     put = '\lipsum[1]  % 使用 \lipsum 生成虚拟文本，可以删除'
     put = ''
-    put = '\paragraph{段落2}'
+    put = '\paragraph{Paragraph 2}'
     put = '\lipsum[2]'
     put = ''
-    put = '\section{第二节}'
-    put = '\paragraph{段落1}'
+    put = '\section{Section 2}'
+    put = '\paragraph{Paragraph 1}'
     put = '\lipsum[3]'
     put = ''
-    put = '\paragraph{段落2}'
+    put = '\paragraph{Paragraph 2}'
     put = '\lipsum[4]'
     put = ''
     put = '% 参考文献'
@@ -89,16 +93,49 @@ function! SetLaTeXTemplate()
     normal ggVG=
 endfunction
 
-" 在保存 .tex 文件时自动编译（使用 xelatex）
-augroup LaTeXAutoCompile
-    autocmd!
-    autocmd BufWritePost *.tex call CompileLaTeX()
-augroup END
+" 在保存 LaTeX 文档时执行 xelatex 编译
+autocmd BufWritePost *.tex call CompileLaTeX()
 
 function! CompileLaTeX()
-    let l:compile = 'silent !xelatex % > /dev/null'
-    execute l:compile
+    " 获取当前文件名
+    let l:current_file = expand('%')
+
+    " 执行 xelatex 编译
+    let l:compile_command = 'xelatex -interaction=nonstopmode ' . l:current_file
+
+    " 打开终端执行 xelatex 命令，并提供换行符
+    let l:compile_result = system(l:compile_command . ' < /dev/tty &')
+
+    " 等待编译完成
     redraw!
+    sleep 2000m
+
+    " 打印编译信息
+    echo 'LaTeX compilation completed.'
+
+    " 如果编译成功，打开生成的 PDF
+    if v:shell_error == 0
+        call OpenPDF()
+    else
+        echo 'LaTeX compilation failed. Check the error messages.'
+    endif
+endfunction
+
+function! OpenPDF()
+    " 获取生成的 PDF 文件名
+    let l:pdf_file = substitute(expand('%:r'), ' ', '\ ', 'g') . '.pdf'
+
+    " 判断操作系统类型
+    if has('win32') || has('win64')
+        " Windows 上使用 start 命令
+        let l:open_command = 'start ' . l:pdf_file
+    else
+        " POSIX 上使用 open 命令
+        let l:open_command = 'open ' . l:pdf_file
+    endif
+
+    " 打开生成的 PDF
+    call system(l:open_command)
 endfunction
 
 
