@@ -12,6 +12,8 @@ function! SetLaTeXTemplate()
     put = '\usepackage{titlesec}'
     put = '\usepackage{setspace}'
     put = '\usepackage{geometry}'
+    put = '\usepackage{amsmath}  % 数学公式宏包'
+    put = '\usepackage{amssymb}  % 数学符号宏包'
     put = '\usepackage{listings}  % 代码块宏包'
     put = '\usepackage{graphicx}  % 图像宏包'
     put = '\usepackage{float}  % 浮动体宏包'
@@ -141,15 +143,15 @@ endfunction
 function! InsertLaTeXTemplate(command)
     let template = ''
     if a:command ==# 'e'
-        let template = "\\begin{equation}\n\t\n\n\\end{equation}"
+        let template = "\\begin{equation}\n\n\n\\end{equation}"
     elseif a:command ==# 'c'
-        let template = "\\begin{lstlisting}[language=, caption=]\n\t\n\\end{lstlisting}"
+        let template = "\\begin{lstlisting}[language=, caption=]\n\n\\end{lstlisting}"
     elseif a:command ==# 'i'
-        let template = "\\begin{figure}[h]\n\t\\centering\n\t\\includegraphics[width=0.5\\textwidth]{example-image}\n\t\\caption{示例图片}\n\t\\label{fig:example}\n\\end{figure}"
+        let template = "\\begin{figure}[h]\n\\centering\n\\includegraphics[width=0.5\\textwidth]{example-image}\n\\caption{示例图片}\n\\label{fig:example}\n\\end{figure}"
     elseif a:command ==# 't'
-        let template = "\\begin{table}\n\t\\caption{Table caption}\n\t\\centering\n\t\\begin{tabular}{|c|c|}\n\t\t\\hline\n\t\tHeader1 & Header2 \\\\\n\t\t\\hline\n\t\tContent1 & Content2 \\\\\n\t\t\\hline\n\t\\end{tabular}\n\\end{table}"
+        let template = "\\begin{table}\n\\caption{Table caption}\n\\centering\n\\begin{tabular}{|c|c|}\n\\hline\nHeader1 & Header2 \n\\hline\nContent1 & Content2 \n\\hline\n\\end{tabular}\n\\end{table}"
     elseif a:command ==# 'l'
-        let template = "\\begin{itemize}\n\t\\item \n\t\\item \n\\end{itemize}"
+        let template = "\\begin{itemize}\n\\item \n\\item \n\\end{itemize}"
     elseif a:command ==# 'lr'
         let template = "\\label{}"
     elseif a:command ==# 'fn'
@@ -157,9 +159,9 @@ function! InsertLaTeXTemplate(command)
     elseif a:command ==# 'hl'
         let template = "\\href{http://www.example.com}{链接文本}"
     elseif a:command ==# 'mt'
-        let template = "\\begin{theorem}\n\t\n\\end{theorem}"
+        let template = "\\begin{theorem}\n\n\\end{theorem}"
     elseif a:command ==# 'ml'
-        let template = "\\begin{lemma}\n\t\n\\end{lemma}"
+        let template = "\\begin{lemma}\n\n\\end{lemma}"
     elseif a:command ==# '1'
         let template = "\\section{}"
     elseif a:command ==# '2'
@@ -171,7 +173,7 @@ function! InsertLaTeXTemplate(command)
     elseif a:command ==# '5'
         let template = "\\subparagraph{}"
     elseif a:command ==# 'ac'
-        let template = "\\begin{acronym}\n\t\\acro{GNU}{GNU's Not Unix}\n\\end{acronym}"
+        let template = "\\begin{acronym}\n\\acro{GNU}{GNU's Not Unix}\n\\end{acronym}"
     endif
 
     if !empty(template)
@@ -185,4 +187,5 @@ function! LaTeXInsertMode()
     let command = input("输入 LaTeX 快捷命令：")
     call InsertLaTeXTemplate(command)
 endfunction
+
 
