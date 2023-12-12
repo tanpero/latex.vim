@@ -80,7 +80,7 @@ function! SetLaTeXTemplate()
     put = ''
     put = '% 参考文献'
     put = '\begin{thebibliography}{9}'
-    put = '    \bibitem{sample} Author, Title, Journal, Year.'
+    put = '    \bibitem{sample} Author, Title, Journal, 1970-1-1.'
     put = '    % 添加更多的参考文献'
     put = '\end{thebibliography}'
     put = ''
@@ -114,17 +114,17 @@ function! InsertLaTeXTemplate(command)
     elseif a:command ==# 't'
         let template = "\\begin{table}\n\t\\caption{Table caption}\n\t\\centering\n\t\\begin{tabular}{|c|c|}\n\t\t\\hline\n\t\tHeader1 & Header2 \\\\\n\t\t\\hline\n\t\tContent1 & Content2 \\\\\n\t\t\\hline\n\t\\end{tabular}\n\\end{table}"
     elseif a:command ==# 'l'
-        let template = "\\begin{itemize}\n\t\\item 项目 1\n\t\\item 项目 2\n\\end{itemize}"
+        let template = "\\begin{itemize}\n\t\\item \n\t\\item \n\\end{itemize}"
     elseif a:command ==# 'lr'
-        let template = "\\label{标签}"
+        let template = "\\label{}"
     elseif a:command ==# 'fn'
-        let template = "\footnote{脚注}"
+        let template = "\footnote{}"
     elseif a:command ==# 'hl'
         let template = "\\href{http://www.example.com}{链接文本}"
     elseif a:command ==# 'mt'
-        let template = "\\begin{theorem}\n\t这是一个定理\n\\end{theorem}"
+        let template = "\\begin{theorem}\n\t\n\\end{theorem}"
     elseif a:command ==# 'ml'
-        let template = "\\begin{lemma}\n\t这是一个引理\n\\end{lemma}"
+        let template = "\\begin{lemma}\n\t\n\\end{lemma}"
     elseif a:command ==# '1'
         let template = "\\section{}"
     elseif a:command ==# '2'
