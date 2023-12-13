@@ -12,8 +12,6 @@ function! SetLaTeXTemplate()
     put = '\usepackage{titlesec}'
     put = '\usepackage{setspace}'
     put = '\usepackage{geometry}'
-    put = '\usepackage{amsmath}  % 数学公式宏包'
-    put = '\usepackage{amssymb}  % 数学符号宏包'
     put = '\usepackage{listings}  % 代码块宏包'
     put = '\usepackage{graphicx}  % 图像宏包'
     put = '\usepackage{float}  % 浮动体宏包'
@@ -24,8 +22,17 @@ function! SetLaTeXTemplate()
     put = '\usepackage{lipsum}'
     put = '\usepackage[english, chinese]{babel}'
     put = '\usepackage{datetime2}'
+    put = '\usepackage{minted}'
+    put = '\usepackage{xcolor}'
     put = '\DTMlangsetup[en-US]{showdayofmonth=false}'
-    put = '\DTMlangsetup[chinese]{showdayofmonth=false}'
+    put = '% 重新定义 figure 的编号前缀'
+    put = '\renewcommand{\figurename}{图}'
+    put = ''
+    put = '% 重新定义 listing 的编号前缀'
+    put = '\renewcommand{\lstlistingname}{代码}'
+    put = ''
+    put = '% 重新定义 table 的编号前缀'
+    put = '\renewcommand{\tablename}{表}'
     put = ''
     put = ''
     put = '% 设置中文字体'
@@ -38,7 +45,6 @@ function! SetLaTeXTemplate()
     put = '\geometry{top=2.54cm, bottom=2.54cm, left=3.18cm, right=3.18cm}'
     put = ''
     put = '% 设置行间距和段间距'
-    put = '\onehalfspacing  % 行间距为1.5倍'
     put = '\setlength{\parskip}{1.25\baselineskip}  % 段间距为1.25倍行间距'
     put = ''
     put = '% 定义标题格式'
@@ -52,11 +58,11 @@ function! SetLaTeXTemplate()
     put = '    \begin{center}'
     put = '        \bfseries\fontsize{28}{32}\selectfont 书名'
     put = ''
-    put = '        \vspace{1cm}'
+    put = '        \vspace{0.5cm}'
     put = ''
     put = '        \fontsize{16}{18}\selectfont Camille Dolma'
     put = ''
-    put = '        \vspace{0.618cm}'
+    put = '        \vspace{0.314cm}'
     put = ''       
     put = '        \fontsize{14}{16}\selectfont \DTMtoday  % 使用中文日期'
     put = ''
@@ -68,19 +74,13 @@ function! SetLaTeXTemplate()
     put = '\newpage'
     put = ''
     put = '% 正文'
+    put = '\chapter{Chapter 1}'
     put = '\section{Section 1}'
     put = '\paragraph{Paragraph 1}'
-    put = '\lipsum[1]  % 使用 \lipsum 生成虚拟文本，可以删除'
     put = ''
-    put = '\paragraph{Paragraph 2}'
-    put = '\lipsum[2]'
     put = ''
-    put = '\section{Section 2}'
-    put = '\paragraph{Paragraph 1}'
-    put = '\lipsum[3]'
     put = ''
-    put = '\paragraph{Paragraph 2}'
-    put = '\lipsum[4]'
+    put = ''
     put = ''
     put = '% 参考文献'
     put = '\begin{thebibliography}{9}'
@@ -91,6 +91,7 @@ function! SetLaTeXTemplate()
     put = '\end{document}'
     put = ''
     normal ggVG=
+    normal! :70
 endfunction
 
 " 在保存 LaTeX 文档时执行 xelatex 编译
@@ -101,7 +102,7 @@ function! CompileLaTeX()
     let l:current_file = expand('%')
 
     " 执行 xelatex 编译
-    let l:compile_command = 'xelatex -interaction=nonstopmode ' . l:current_file
+    let l:compile_command = 'xelatex -interaction=nonstopmode -shell-escape ' . l:current_file
 
     " 打开终端执行 xelatex 命令，并提供换行符
     let l:compile_result = system(l:compile_command . ' < /dev/tty &')
@@ -139,15 +140,32 @@ function! OpenPDF()
 endfunction
 
 
+function! MoveCursorToEquation(target)
+    " 保存当前光标位置
+    let save_cursor = getpos('.')
+
+    " 向上搜索目标
+    call search(a:target, 'bW')
+
+    " 如果找到了目标
+    if search(a:target, 'bW') > 0
+        " 将光标移到下一行开头
+        normal! j0
+    else
+        " 如果未找到，还原光标位置
+        call setpos('.', save_cursor)
+    endif
+endfunction
+
 " 插入 LaTeX 代码模板函数
 function! InsertLaTeXTemplate(command)
     let template = ''
     if a:command ==# 'e'
-        let template = "\\begin{equation}\n\n\n\\end{equation}"
+        let template = "\\begin{equation}\n\n\n\n\\end{equation}"
     elseif a:command ==# 'c'
-        let template = "\\begin{lstlisting}[language=, caption=]\n\n\\end{lstlisting}"
+        let template = "\\begin{listing}[htbp]\n\\begin{minted}[linenos, breaklines, numbersep=1pt, fontsize=\\small, tabsize=4, codetagify]{}\n\n\n\n\n\\end{minted}\n\\caption{}\n\\label{}\n\\end{listing}"
     elseif a:command ==# 'i'
-        let template = "\\begin{figure}[h]\n\\centering\n\\includegraphics[width=0.5\\textwidth]{example-image}\n\\caption{示例图片}\n\\label{fig:example}\n\\end{figure}"
+        let template = "\\begin{figure}[htbp]\n\\centering\n\\includegraphics[width=0.8\\textwidth]{}\n\\caption{}\n\\label{}\n\\end{figure}"
     elseif a:command ==# 't'
         let template = "\\begin{table}\n\\caption{Table caption}\n\\centering\n\\begin{tabular}{|c|c|}\n\\hline\nHeader1 & Header2 \n\\hline\nContent1 & Content2 \n\\hline\n\\end{tabular}\n\\end{table}"
     elseif a:command ==# 'l'
@@ -162,6 +180,8 @@ function! InsertLaTeXTemplate(command)
         let template = "\\begin{theorem}\n\n\\end{theorem}"
     elseif a:command ==# 'ml'
         let template = "\\begin{lemma}\n\n\\end{lemma}"
+    elseif a:command ==# '0'
+        let template = "\\chapter{}"
     elseif a:command ==# '1'
         let template = "\\section{}"
     elseif a:command ==# '2'
@@ -183,9 +203,34 @@ endfunction
 
 nnoremap <C-o> :call LaTeXInsertMode()<CR>
 
+function! LaTeXMoveCursorAutomatically(n)
+    let current_line = line('.')
+
+    let target_line = current_line - a:n
+
+    execute 'normal! ' . target_line . 'G'
+
+    startinsert
+endfunction
+
+
 function! LaTeXInsertMode()
     let command = input("输入 LaTeX 快捷命令：")
+    let g:saved_line = line('.')
+    let save_cursor = getpos('.')
     call InsertLaTeXTemplate(command)
+
+    if command ==# 'e'
+        call LaTeXMoveCursorAutomatically(2)
+    elseif command ==# 'c'
+        call LaTeXMoveCursorAutomatically(6)
+    elseif command ==# 'i'
+        call LaTeXMoveCursorAutomatically(3)
+        normal! $a
+    endif
+
+
 endfunction
+
 
 
