@@ -91,7 +91,6 @@ function! SetLaTeXTemplate()
     put = '\end{document}'
     put = ''
     normal ggVG=
-    normal! :70
 endfunction
 
 " 在保存 LaTeX 文档时执行 xelatex 编译
@@ -226,6 +225,18 @@ function! LaTeXInsertMode()
         call LaTeXMoveCursorAutomatically(6)
     elseif command ==# 'i'
         call LaTeXMoveCursorAutomatically(3)
+        normal! $a
+    elseif command ==# '0'
+        normal! $a
+    elseif command ==# '1'
+        normal! $a
+    elseif command ==# '2'
+        normal! $a
+    elseif command ==# '3'
+        normal! $a
+    elseif command ==# '4'
+        normal! $a
+    elseif command ==# '5'
         normal! $a
     endif
 
