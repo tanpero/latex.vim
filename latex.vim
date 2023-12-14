@@ -6,25 +6,29 @@ augroup END
 
 function! SetLaTeXTemplate()
     " 插入 LaTeX 模板内容
-    put = '\documentclass[12pt]{article}'
+    put = '\documentclass[12pt]{book}'
     put = '\usepackage[utf8]{inputenc}'
     put = '\usepackage{xeCJK}'
     put = '\usepackage{titlesec}'
+    put = '\usepackage{titletoc}'
     put = '\usepackage{setspace}'
     put = '\usepackage{geometry}'
-    put = '\usepackage{listings}  % 代码块宏包'
-    put = '\usepackage{graphicx}  % 图像宏包'
-    put = '\usepackage{float}  % 浮动体宏包'
-    put = '\usepackage{caption}  % 图片标题宏包'
-    put = '\usepackage{marginnote}  % 批注宏包'
-    put = '\usepackage{hyperref}  % 超链接宏包'
-    put = '\usepackage{natbib}  % 参考文献宏包'
+    put = '\usepackage{amssymb}'
+    put = '\usepackage{amsmath}'
+    put = '\usepackage{listings}'
+    put = '\usepackage{graphicx}'
+    put = '\usepackage{tikz}'
+    put = '\usepackage{float}'
+    put = '\usepackage{caption}'
+    put = '\usepackage{marginnote}'
+    put = '\usepackage{hyperref}'
+    put = '\usepackage{natbib}'
     put = '\usepackage{lipsum}'
-    put = '\usepackage[english, chinese]{babel}'
-    put = '\usepackage{datetime2}'
+    put = '\usepackage{datetime}'
     put = '\usepackage{minted}'
     put = '\usepackage{xcolor}'
-    put = '\DTMlangsetup[en-US]{showdayofmonth=false}'
+    put = '\usepackage{zhnumber}'
+    put = ''
     put = '% 重新定义 figure 的编号前缀'
     put = '\renewcommand{\figurename}{图}'
     put = ''
@@ -34,12 +38,20 @@ function! SetLaTeXTemplate()
     put = '% 重新定义 table 的编号前缀'
     put = '\renewcommand{\tablename}{表}'
     put = ''
+    put = '\renewcommand{\contentsname}{目录}'
+    put = '\renewcommand{\bibname}{参考文献}'
     put = ''
-    put = '% 设置中文字体'
-    put = '\setCJKmainfont{SimSun}  % 使用宋体或其他合适的字体'
+    put = '% 将公式编号设置为 (章节号.公式编号) 的格式'
+    put = '\numberwithin{equation}{chapter}'
     put = ''
-    put = '% 设置英文字体'
-    put = '\setmainfont{Times New Roman}  % 使用 Times New Roman 或其他合适的字体'
+    put = '% 定义章节标题的格式'
+    put = '\renewcommand\thechapter{\arabic{chapter}} % 只显示阿拉伯数字，不显示章节编号前缀'
+    put = '\renewcommand\theequation{\thechapter.\arabic{equation}} % 设置公式编号格式'
+    put = ''
+    put = '\usemintedstyle{monokai}'
+    put = ''
+    put = '\newdateformat{mydateformat}{\THEYEAR 年 \THEMONTH 月 \THEDAY 日}'
+    put = ''
     put = ''
     put = '% 设置页边距'
     put = '\geometry{top=2.54cm, bottom=2.54cm, left=3.18cm, right=3.18cm}'
@@ -51,30 +63,41 @@ function! SetLaTeXTemplate()
     put = '\titleformat{\section}{\bfseries\fontsize{14}{16}\selectfont}{\thesection}{1em}{}'
     put = '\titleformat{\paragraph}{\fontsize{12}{14}\selectfont}{\theparagraph}{1em}{}'
     put = ''
+    put = '% 定义章节格式'
+    put = '\titleformat{\chapter}[display]'
+    put = '{\normalfont\huge\bfseries\centering}{第\,\zhnumber{\thechapter}\,章}{1em}{}'
+    put = ''
+    put = '% 定义目录格式'
+    put = '\titlecontents{chapter}[0pt]'
+    put = '{\addvspace{1ex}}'
+    put = '{\bfseries 第\,\zhnumber{\thecontentslabel}\,章\quad}'
+    put = '{} % 无需填写'
+    put = '{\hfill\contentspage} % 在每个章节条目后添加页码'
+    put = ''
     put = '\begin{document}'
     put = ''
     put = '% 标题页'
     put = '\begin{titlepage}'
     put = '    \begin{center}'
-    put = '        \bfseries\fontsize{28}{32}\selectfont 书名'
-    put = ''
-    put = '        \vspace{0.5cm}'
-    put = ''
-    put = '        \fontsize{16}{18}\selectfont Camille Dolma'
-    put = ''
-    put = '        \vspace{0.314cm}'
-    put = ''       
-    put = '        \fontsize{14}{16}\selectfont \DTMtoday  % 使用中文日期'
-    put = ''
-    put = '    \end{center}'
+    put = '    {\bfseries\fontsize{28}{32}\selectfont 书名 \par}'
+    put = '    \vspace{0.5cm}'
+    put = '    {\fontsize{16}{18}\selectfont \textit{Camille Dolma} \par}'
+    put = '    \vspace{0.314cm}'
+    put = '    \vfill'
+    put = '    {\fontsize{14}{16}\selectfont \textnormal{\mydateformat\today} \par}'
+    put = '  \end{center}'
     put = '\end{titlepage}'
     put = ''
     put = '% 目录页'
+    put = '\frontmatter'
     put = '\tableofcontents'
     put = '\newpage'
     put = ''
+    put = ''
+    put = ''
     put = '% 正文'
-    put = '\chapter{Chapter 1}'
+    put = '\mainmatter'
+    put = '\chapter{Hello world}'
     put = '\section{Section 1}'
     put = '\paragraph{Paragraph 1}'
     put = ''
@@ -84,17 +107,18 @@ function! SetLaTeXTemplate()
     put = ''
     put = '% 参考文献'
     put = '\begin{thebibliography}{9}'
-    put = '    \bibitem{sample} Author, Title, Journal, 1970-1-1.'
-    put = '    % 添加更多的参考文献'
+    put = '\bibitem{sample} Author, Title, Journal, 1970-1-1.'
+    put = '% 添加更多的参考文献'
     put = '\end{thebibliography}'
     put = ''
     put = '\end{document}'
+    put = ''
     put = ''
     normal ggVG=
 endfunction
 
 " 在保存 LaTeX 文档时执行 xelatex 编译
-autocmd BufWritePost *.tex call CompileLaTeX()
+autocmd BufWritePost *.tex call CompileLaTeX() | call CompileLaTeX() | echo "编译完成"
 
 function! CompileLaTeX()
     " 获取当前文件名
@@ -109,9 +133,6 @@ function! CompileLaTeX()
     " 等待编译完成
     redraw!
     sleep 2000m
-
-    " 打印编译信息
-    echo 'LaTeX compilation completed.'
 
     " 如果编译成功，打开生成的 PDF
     if v:shell_error == 0
@@ -162,7 +183,7 @@ function! InsertLaTeXTemplate(command)
     if a:command ==# 'e'
         let template = "\\begin{equation}\n\n\n\n\\end{equation}"
     elseif a:command ==# 'c'
-        let template = "\\begin{listing}[htbp]\n\\begin{minted}[linenos, breaklines, numbersep=1pt, fontsize=\\small, tabsize=4, codetagify]{}\n\n\n\n\n\\end{minted}\n\\caption{}\n\\label{}\n\\end{listing}"
+        let template = "\\begin{listing}[htbp]\n\\begin{minted}[linenos, breaklines, numbersep=3pt, fontsize=\\small, tabsize=4, codetagify]{}\n\n\n\n\n\\end{minted}\n\\caption{}\n\\label{}\n\\end{listing}"
     elseif a:command ==# 'i'
         let template = "\\begin{figure}[htbp]\n\\centering\n\\includegraphics[width=0.8\\textwidth]{}\n\\caption{}\n\\label{}\n\\end{figure}"
     elseif a:command ==# 't'
@@ -228,18 +249,23 @@ function! LaTeXInsertMode()
         normal! $a
     elseif command ==# '0'
         normal! $a
+        startinsert
     elseif command ==# '1'
         normal! $a
+        startinsert
     elseif command ==# '2'
         normal! $a
+        startinsert
     elseif command ==# '3'
         normal! $a
+        startinsert
     elseif command ==# '4'
         normal! $a
+        startinsert
     elseif command ==# '5'
         normal! $a
+        startinsert
     endif
-
 
 endfunction
 
